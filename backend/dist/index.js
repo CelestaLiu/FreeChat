@@ -1,7 +1,8 @@
-import express from 'express';
-const app = express();
-//middlewares
-app.use(express.json());
-//connections and listeners
-app.listen(5000, () => console.log("Server Open"));
+import app from "./app.js";
+import { connectToDatabase } from "./db/connection.js";
+const PORT = process.env.PORT || 5000;
+// connections and listeners
+connectToDatabase().then(() => {
+    app.listen(PORT, () => console.log("Server open & Connected to Database"));
+}).catch(err => console.log(err));
 //# sourceMappingURL=index.js.map
