@@ -4,7 +4,7 @@ import { red } from '@mui/material/colors'
 import { useAuth } from '../context/AuthContext'
 import ChatItem from '../components/chat/ChatItem'
 import {IoMdSend} from 'react-icons/io'
-import { getUserChats, sendChatRequest } from '../helpers/api-communicator'
+import { deleteUserChats, getUserChats, sendChatRequest } from '../helpers/api-communicator'
 import toast from 'react-hot-toast'
 import { Navigate, useNavigate } from 'react-router-dom'
 
@@ -31,6 +31,19 @@ const Chat = () => {
     setChatMessages([...chatData.chats])
     //
   };
+
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading("Deleting Chats", {id: "deletechats"})
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success("Chats Deleted Successfully", {id: "deletechats"})
+    } catch (error) {
+      console.log(error)
+      toast.error("Deleting chats failed", {id: "deletechats"})
+    }
+  }  
+
   useLayoutEffect(()=>{
     console.log(auth)
     if (auth?.isLoggedIn && auth?.user) {
@@ -62,7 +75,7 @@ const Chat = () => {
         <Typography sx={{mx: 'auto', fontFamily: "work sans", my: 4, p: 3}}>
           You can ask some questions related to Knowledge, Business, Advices, Education, etc. But avoid sharing personal information
         </Typography>
-        <Button sx={{width: "200px", my: 'auto', color: 'white', fontweight: "700", borderRadius: 3, mx: "auto", bgcolor: red[300], ":hover": {
+        <Button onClick={handleDeleteChats} sx={{width: "200px", my: 'auto', color: 'white', fontweight: "700", borderRadius: 3, mx: "auto", bgcolor: red[300], ":hover": {
           bgcolor: red.A400,
         }}}>Clear Conversation</Button>
       </Box>
